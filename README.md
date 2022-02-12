@@ -1,10 +1,10 @@
 <div align="center">
   
 <a href="https://github.com/GalaxzyDev">
-  <img src="./assets/logo.png" alt="Logo" width="100" height="90">
+  <img src="./assets/logo.png" alt="Logo" width="105" height="95">
 </a>
 
-### 💀 Deadcord v1.0
+# 💀 Deadcord v1.0
 *The best Discord raid tool, the best for free. Trusted, Powerful, Purposeful*
 
 ![GitHub All Releases](https://img.shields.io/github/downloads/Galaxzy345/Deadcord/total?color=black) ![GitHub stars](https://img.shields.io/github/stars/Galaxzy345/Deadcord?style=social) ![GitHub watchers](https://img.shields.io/github/watchers/Galaxzy345/Deadcord?style=social)
