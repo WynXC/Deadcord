@@ -61,7 +61,7 @@ func ResetTokenServiceWithManualTokens(token_list []string) int {
 
 	status, raw_tokens, built_tokens := LoadTokens()
 
-	if status == true {
+	if status {
 		return SetTokens(raw_tokens, built_tokens)
 	} else {
 		return 0

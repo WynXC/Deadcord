@@ -4,6 +4,7 @@ import (
 	"Deadcord/core"
 	"Deadcord/requests"
 	"Deadcord/util"
+	"strconv"
 	"sync"
 )
 
@@ -40,7 +41,7 @@ func speakWorker(channel_id string, message string) {
 		case 403:
 			util.WriteToConsole("Bot could not send message, no access.", 1)
 		default:
-			util.WriteToConsole("Bot could not send message, request failed.", 3)
+			util.WriteToConsole("Token could not send message, request failed. Code: "+strconv.Itoa(status_code), 3)
 		}
 
 	}

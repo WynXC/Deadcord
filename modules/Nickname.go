@@ -4,6 +4,7 @@ import (
 	"Deadcord/core"
 	"Deadcord/requests"
 	"Deadcord/util"
+	"strconv"
 	"sync"
 )
 
@@ -37,11 +38,11 @@ func nickWorker(token string, server_id string, nickname string) {
 	if status {
 		switch status_code {
 		case 200:
-			util.WriteToConsole("Token chnaged nickname to:"+nickname_string+".", 2)
+			util.WriteToConsole("Token chnaged nickname to: "+nickname_string+".", 2)
 		case 429:
 			util.WriteToConsole("Change nickname request rate limited.", 1)
 		default:
-			util.WriteToConsole("Token could not change its nickname, request failed.", 3)
+			util.WriteToConsole("Token could not change nickname, request failed. Code: "+strconv.Itoa(status_code), 3)
 		}
 	}
 

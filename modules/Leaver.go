@@ -4,6 +4,7 @@ import (
 	"Deadcord/core"
 	"Deadcord/requests"
 	"Deadcord/util"
+	"strconv"
 	"sync"
 )
 
@@ -30,7 +31,7 @@ func leaveWorker(server_id string, token string) {
 		if status_code == 204 {
 			util.WriteToConsole("Bot successfully left guild.", 2)
 		} else {
-			util.WriteToConsole("Bot could not leave guild, request failed.", 3)
+			util.WriteToConsole("Token could not leave guild, request failed. Code: "+strconv.Itoa(status_code), 3)
 		}
 	}
 

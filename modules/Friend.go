@@ -4,6 +4,7 @@ import (
 	"Deadcord/core"
 	"Deadcord/requests"
 	"Deadcord/util"
+	"strconv"
 	"sync"
 )
 
@@ -33,7 +34,7 @@ func friendWorker(user_id string, token string) {
 		case 404:
 			util.WriteToConsole("Could not find user to send friend request.", 1)
 		default:
-			util.WriteToConsole("Bot could not send friend request, request failed.", 3)
+			util.WriteToConsole("Token could not send friend request, request failed. Code: "+strconv.Itoa(status_code), 3)
 		}
 	}
 

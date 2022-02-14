@@ -123,8 +123,6 @@ func spamWorker(token string, channels []string, messages []string, mode int, tt
 				case 403:
 					util.WriteToConsole("Channel unavailable, removing channel.", 3)
 					util.RemoveFromSlice(used_channels, channel_key)
-				case 405:
-					fmt.Println("405")
 				default:
 					fmt.Println(status_code)
 				}
@@ -169,7 +167,7 @@ func scrapeBasic(message_objects []byte) []string {
 			author_id := data.Author.ID
 			if len(FoundUsers) < 40 {
 				template_id := "<@" + author_id + ">"
-				if util.Contains(scraped_users, template_id) == false {
+				if !util.Contains(scraped_users, template_id) {
 					scraped_users = append(scraped_users, template_id)
 				}
 			} else {

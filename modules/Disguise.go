@@ -3,11 +3,12 @@ package modules
 import (
 	"Deadcord/core"
 	"Deadcord/requests"
+	"Deadcord/util"
 	b64 "encoding/base64"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 )
 
@@ -44,6 +45,13 @@ func disguiseWorker(token string) {
 	})
 
 	if status {
-		fmt.Println(status_code)
+		switch status_code {
+		case 200:
+			util.WriteToConsole("Successfully changed token PFP.", 2)
+		case 429:
+			util.WriteToConsole("IP ratelimited or Cloudflare banned.", 1)
+		default:
+			util.WriteToConsole("Token could not react, request failed. Code: "+strconv.Itoa(status_code), 3)
+		}
 	}
 }

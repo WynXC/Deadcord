@@ -170,11 +170,18 @@ func join_guild(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	guild_invite := r.Form.Get("invite")
+	join_delay := r.Form.Get("delay")
 
-	if util.AllParameters([]string{guild_invite}) {
+	if util.AllParameters([]string{guild_invite, join_delay}) {
 		join_result_number := 0
 
-		join_result_number = modules.StartJoinGuildThreads(guild_invite)
+		delay, err := strconv.Atoi(join_delay)
+		if err != nil {
+			w.Write(requests.ErrorResponse("Invalid delay parameter type."))
+			return
+		}
+
+		join_result_number = modules.StartJoinGuildThreads(guild_invite, delay)
 
 		if join_result_number > 0 {
 			server_id := modules.GetGuildIdFromInvite(guild_invite)
@@ -279,6 +286,7 @@ func delete_webhook(w http.ResponseWriter, r *http.Request) {
 
 func disguise_tokens(w http.ResponseWriter, r *http.Request) {
 	requests.ReadyRequestCors(w)
+
 	modules.StartDisguiseThreads()
 
 	w.Write(requests.JsonResponse(200, "Bots attempted to disguise.", map[string]interface{}{}))
