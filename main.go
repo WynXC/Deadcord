@@ -8,13 +8,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	//"os"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
-	//"golang.org/x/sys/windows"
+	"golang.org/x/sys/windows"
 )
 
 func check_engine(w http.ResponseWriter, r *http.Request) {
@@ -369,13 +368,11 @@ var deadcord_banner string = `
 
 func main() {
 
-	/*
-		stdout := windows.Handle(os.Stdout.Fd())
-		var originalMode uint32
+	stdout := windows.Handle(os.Stdout.Fd())
+	var originalMode uint32
 
-		windows.GetConsoleMode(stdout, &originalMode)
-		windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
-	*/
+	windows.GetConsoleMode(stdout, &originalMode)
+	windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
 
 	util.WriteToConsole("Initializing output logger.", 0)
 	core.InitLogger()
