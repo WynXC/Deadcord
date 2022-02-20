@@ -7,10 +7,16 @@ import (
 	b64 "encoding/base64"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
 )
+
+var image_urls = [2]string{
+	"https://picsum.photos/512/512",
+	"https://cataas.com/cat?width=512&height=512",
+}
 
 func StartDisguiseThreads() {
 	var wg sync.WaitGroup
@@ -24,7 +30,10 @@ func StartDisguiseThreads() {
 }
 
 func disguiseWorker(token string) {
-	resp, err := http.Get("https://picsum.photos/512/512")
+
+	random_image_api := image_urls[rand.Intn(len(image_urls))]
+
+	resp, err := http.Get(random_image_api)
 
 	if err != nil {
 		log.Fatal(err)
@@ -47,11 +56,11 @@ func disguiseWorker(token string) {
 	if status {
 		switch status_code {
 		case 200:
-			util.WriteToConsole("Successfully changed token PFP.", 2)
+			util.WriteToConsole("Successfully changed token profile picture.", 2)
 		case 429:
 			util.WriteToConsole("IP ratelimited or Cloudflare banned.", 1)
 		default:
-			util.WriteToConsole("Token could not react, request failed. Code: "+strconv.Itoa(status_code), 3)
+			util.WriteToConsole("Token could not chnage profile picture, request failed. Code: "+strconv.Itoa(status_code), 3)
 		}
 	}
 }

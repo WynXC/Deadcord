@@ -12,7 +12,11 @@ func StartSpeakThreads(server_id string, message string) bool {
 	var wg sync.WaitGroup
 	wg.Add(len(core.RawTokensLoaded))
 
-	channel_list := GetChannels(server_id)
+	channel_list, err := GetChannels(server_id)
+
+	if err != nil {
+		return false
+	}
 
 	for _, channel := range channel_list {
 		go func(channel string, message string) {

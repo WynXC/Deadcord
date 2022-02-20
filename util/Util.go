@@ -19,7 +19,7 @@ var (
 )
 
 func GetQuote() string {
-	quotes := [12]string{
+	quotes := [15]string{
 		"This ain't hacking.",
 		"Lagging Discord since last month.",
 		"What are you here for?",
@@ -31,6 +31,10 @@ func GetQuote() string {
 		"Built to protest against Discord.",
 		"Deadcord never dies. Its already dead.",
 		"Some assembly required.",
+		"Deadcord is a rat.",
+		"What server we going after today?",
+		"Some assembly required.",
+		"Tokens not included.",
 	}
 
 	random_quote := quotes[rand.Intn(len(quotes))]

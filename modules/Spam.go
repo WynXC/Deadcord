@@ -5,7 +5,6 @@ import (
 	"Deadcord/requests"
 	"Deadcord/util"
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"strconv"
@@ -18,8 +17,12 @@ var (
 	FoundUsers    []string
 )
 
-func StartSpamThreads(server_id string, messages []string, mode int, tts bool) int {
-	channels_found := GetChannels(server_id)
+func StartSpamThreads(server_id string, channels string, messages []string, mode int, tts bool) int {
+	channels_found := strings.Split(channels, ",")
+
+	if len(channels_found) == 0 {
+		return 3
+	}
 
 	for _, message := range messages {
 		if len(message) > 1990 {
@@ -38,8 +41,10 @@ func StartSpamThreads(server_id string, messages []string, mode int, tts bool) i
 			if InServer(server_id, token) {
 				if mode == 3 {
 					for _, channel := range channels_found {
-						messages := GetMessages(channel, 50, token)
-						FoundUsers = scrapeBasic(messages)
+						messages, _ := GetMessages(channel, 50, token)
+						if len(messages) > 0 {
+							FoundUsers = scrapeBasic(messages)
+						}
 					}
 				}
 
@@ -91,8 +96,6 @@ func spamWorker(token string, channels []string, messages []string, mode int, tt
 		}
 
 		built_message = lag_payload.String()
-	default:
-		built_message = random_message
 	}
 
 	for {
@@ -123,8 +126,9 @@ func spamWorker(token string, channels []string, messages []string, mode int, tt
 				case 403:
 					util.WriteToConsole("Channel unavailable, removing channel.", 3)
 					util.RemoveFromSlice(used_channels, channel_key)
-				default:
-					fmt.Println(status_code)
+				case 404:
+					util.WriteToConsole("Channel not found in guild, removing channel.", 3)
+					util.RemoveFromSlice(used_channels, channel_key)
 				}
 			}
 		}

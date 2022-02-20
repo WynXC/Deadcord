@@ -8,12 +8,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+
+	//"os"
 	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
-	"golang.org/x/sys/windows"
+	//"golang.org/x/sys/windows"
 )
 
 func check_engine(w http.ResponseWriter, r *http.Request) {
@@ -70,11 +71,12 @@ func start_spam(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	server_id := r.Form.Get("server_id")
+	channels := r.Form.Get("channels")
 	messages := r.Form.Get("messages")
 	spam_mode := r.Form.Get("mode")
 	spam_tts := r.Form.Get("tts")
 
-	if util.AllParameters([]string{server_id, messages, spam_mode, spam_tts}) {
+	if util.AllParameters([]string{server_id, channels, messages, spam_mode, spam_tts}) {
 		spam_mode_num, err := strconv.Atoi(spam_mode)
 
 		if err != nil {
@@ -91,7 +93,7 @@ func start_spam(w http.ResponseWriter, r *http.Request) {
 
 		messages := strings.Split(messages, "\n")
 
-		start_spam_routines := modules.StartSpamThreads(server_id, messages, spam_mode_num, spam_tts_bool)
+		start_spam_routines := modules.StartSpamThreads(server_id, channels, messages, spam_mode_num, spam_tts_bool)
 
 		switch start_spam_routines {
 		case 1:
@@ -184,11 +186,25 @@ func join_guild(w http.ResponseWriter, r *http.Request) {
 		join_result_number = modules.StartJoinGuildThreads(guild_invite, delay)
 
 		if join_result_number > 0 {
-			server_id := modules.GetGuildIdFromInvite(guild_invite)
+			server_id, err := modules.GetGuildIdFromInvite(guild_invite)
+
+			if err != nil {
+				w.Write(requests.ErrorResponse("Unable to get guild ID from invite."))
+				return
+			}
 
 			if len(server_id) > 0 {
 				util.WriteToConsole("Attempting to auto-verify bots.", 2)
-				modules.StartAutoVerifyThreads(server_id)
+				status := modules.StartAutoVerifyThreads(server_id)
+
+				switch status {
+				case 1:
+					w.Write(requests.ErrorResponse("Coould not scrape for verification messages."))
+				case 2:
+					w.Write(requests.ErrorResponse("No verification messages found."))
+				case 3:
+					w.Write(requests.ErrorResponse("Automatic verification request failed. Code not ok."))
+				}
 			}
 
 		} else {
@@ -250,6 +266,8 @@ func speak(w http.ResponseWriter, r *http.Request) {
 func start_webhook_spam(w http.ResponseWriter, r *http.Request) {
 	requests.ReadyRequestCors(w)
 
+	core.SpamFlag = 0
+
 	r.ParseForm()
 	webhook := r.Form.Get("webhook")
 	username := r.Form.Get("username")
@@ -292,6 +310,44 @@ func disguise_tokens(w http.ResponseWriter, r *http.Request) {
 	w.Write(requests.JsonResponse(200, "Bots attempted to disguise.", map[string]interface{}{}))
 }
 
+func start_thread_spam(w http.ResponseWriter, r *http.Request) {
+	requests.ReadyRequestCors(w)
+
+	core.SpamFlag = 0
+
+	r.ParseForm()
+	channel_id := r.Form.Get("channel_id")
+	thread_name := r.Form.Get("thread_name")
+
+	if util.AllParameters([]string{channel_id, thread_name}) {
+		modules.StartMassThreadCreateThreads(channel_id, thread_name)
+	} else {
+		w.Write(requests.AllParametersError())
+	}
+}
+
+func fetch_channels(w http.ResponseWriter, r *http.Request) {
+	requests.ReadyRequestCors(w)
+
+	r.ParseForm()
+	server_id := r.Form.Get("server_id")
+
+	found_channels, err := modules.GetChannels(server_id)
+
+	if err != nil {
+		w.Write(requests.ErrorResponse("An error occured when attempting to fetch guild channels."))
+		return
+	}
+
+	if len(found_channels) > 0 {
+		w.Write(requests.JsonResponse(200, "Successfully fetched guild channels.", map[string]interface{}{
+			"channels": found_channels,
+		}))
+	} else {
+		w.Write(requests.ErrorResponse("No open channels available."))
+	}
+}
+
 var deadcord_banner string = `
    ██████╗ ███████╗ █████╗ ██████╗  ██████╗ ████████╗ ██████╗ ██████╗   ┏━━━━━━━━━━━━━━━━━━ Info ━━━━━━━━━━━━━━━━┓
    ██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝██████████╗██╔══██╗██╔══██╗     ` + util.Purple + `@ Package:` + util.ColorReset + ` Deadcord-Engine
@@ -301,7 +357,7 @@ var deadcord_banner string = `
    ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ █═█═█═█═╝ ╚═╝  ╚═╝╚═════╝   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  
 
 
-			                  ` + util.White + `The best Discord raid tool. Trusted, Powerful, Purposeful. ` + util.Purple + `
+			          ` + util.White + `The best Discord raid tool. Trusted, Powerful, Purposeful. ` + util.Blue + `Golang Rewrite.` + util.Purple + ` 
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
    ` + util.White + ` You need to download our Better Discord (https://betterdiscord.app/) plugin to interact with Deadcord. You can
@@ -313,11 +369,13 @@ var deadcord_banner string = `
 
 func main() {
 
-	stdout := windows.Handle(os.Stdout.Fd())
-	var originalMode uint32
+	/*
+		stdout := windows.Handle(os.Stdout.Fd())
+		var originalMode uint32
 
-	windows.GetConsoleMode(stdout, &originalMode)
-	windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+		windows.GetConsoleMode(stdout, &originalMode)
+		windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+	*/
 
 	util.WriteToConsole("Initializing output logger.", 0)
 	core.InitLogger()
@@ -355,7 +413,9 @@ func main() {
 		api_router.HandleFunc("/friend", send_friend_requests).Methods("POST")
 		api_router.HandleFunc("/speak", speak).Methods("POST")
 		api_router.HandleFunc("/start-webhook-spam", start_webhook_spam).Methods("POST")
+		api_router.HandleFunc("/start-thread-spam", start_thread_spam).Methods("POST")
 		api_router.HandleFunc("/delete-webhook", delete_webhook).Methods("POST")
+		api_router.HandleFunc("/fetch-channels", fetch_channels).Methods("POST")
 
 		main_router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Deadcord localhost server is ready on port :6660"))

@@ -10,13 +10,9 @@ func StartWebhookDelete(webhook string) bool {
 
 	status, status_code, _ := requests.RequestTemplate("DELETE", webhook, webhook_headers, map[string]interface{}{})
 
-	if status {
-		if status_code == 204 {
-			return true
-		} else {
-			return false
-		}
+	if status && status_code == 204 {
+		return true
+	} else {
+		return false
 	}
-
-	return false
 }

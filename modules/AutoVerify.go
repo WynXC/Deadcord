@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-func StartAutoVerifyThreads(server_id string) {
+func StartAutoVerifyThreads(server_id string) int {
 	var channel_data core.GuildChannels
 
 	var wg sync.WaitGroup
@@ -35,10 +35,13 @@ func StartAutoVerifyThreads(server_id string) {
 			if strings.Contains(channel_object.Name, "verify") || strings.Contains(channel_object.Name, "verification") || strings.Contains(channel_object.Name, "prove-human") {
 				util.WriteToConsole("Found verification channel. Attempting to verify.", 2)
 
-				scraped_messages := GetMessages(channel_object.ID, 50, core.RawTokensLoaded[0])
+				scraped_messages, err := GetMessages(channel_object.ID, 50, core.RawTokensLoaded[0])
+
+				if err != nil {
+					return 1
+				}
 
 				if len(scraped_messages) > 0 {
-
 					var messages core.Message
 					if err := json.Unmarshal(scraped_messages, &messages); err != nil {
 						log.Fatal(err)
@@ -48,21 +51,21 @@ func StartAutoVerifyThreads(server_id string) {
 						if strings.Contains(message.Content, "verify") || strings.Contains(message.Content, "verification") {
 
 							for _, reaction := range message.Reactions {
-
 								StartReactThreads(message.ChannelID, message.ID, reaction.Emoji.Name, false)
-
 							}
 
 						}
 					}
 				} else {
-					return
+					return 2
 				}
 			}
 		}
 	} else {
-		return
+		return 3
 	}
+
+	return 0
 }
 
 func membershipScreenBypassWorker(server_id string, token string) {
@@ -73,4 +76,5 @@ func membershipScreenBypassWorker(server_id string, token string) {
 			util.WriteToConsole("Token bypassed member screening.", 2)
 		}
 	}
+
 }

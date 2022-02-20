@@ -13,6 +13,7 @@ import (
 func LoadTokens() (bool, []string, map[int]map[string]string) {
 	if _, err := os.Stat("./tokens.txt"); os.IsNotExist(err) {
 		util.WriteToConsole("No token file found. Please create one and restart Deadcord.", 3)
+		util.Sleep(3)
 		return false, nil, nil
 	} else {
 		tokens_loaded, err := parseTokenFile("./tokens.txt")

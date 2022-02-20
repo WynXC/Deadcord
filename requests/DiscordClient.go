@@ -65,7 +65,7 @@ func SendDiscordRequest(endpoint string, method string, token string, data map[s
 		"Sec-ch-ua-mobile":   []string{"0"},
 		"Sec-ch-ua-platform": []string{"Windows"},
 		"TE":                 []string{"Trailers"},
-		"User-agent":         []string{token_data["agent"]},
+		"User-Agent":         []string{token_data["agent"]},
 		"X-debug-options":    []string{"bugReporterEnabled"},
 		"X-discord-locale":   []string{"en-US"},
 		"X-super-properties": []string{x_super_props_refined},

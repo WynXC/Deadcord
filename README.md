@@ -9,10 +9,9 @@
 
 ![GitHub All Releases](https://img.shields.io/github/downloads/Galaxzy345/Deadcord/total?color=black) ![GitHub stars](https://img.shields.io/github/stars/Galaxzy345/Deadcord?style=social) ![GitHub watchers](https://img.shields.io/github/watchers/Galaxzy345/Deadcord?style=social)
 
-<a href="https://discord.gg/STxTBXnVDc"><img src="https://discordapp.com/api/guilds/936457455251128392/widget.png?style=banner2"></a>
+<a href="https://discord.gg/qZ8ATyh57a"><img src="https://discordapp.com/api/guilds/942812576188874835/widget.png?style=banner2"></a>
 
-<b>⚠️ Not all features are implemented due to releasing a version earlier than planned.</b>
-
+<a href="https://discord.gg/qZ8ATyh57a"><img src="https://discordapp.com/api/guilds/942812576188874835/widget.png?style=banner2"></a>
 <img src="https://media.discordapp.net/attachments/899058106342977598/908509264564338748/deadcord-screenshot.png" alt="Logo">
 
 </div>
