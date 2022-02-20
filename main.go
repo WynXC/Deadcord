@@ -353,10 +353,9 @@ var deadcord_banner string = `
    ██║  ██║█████╗  ███████║██║  ██║██║     ██║ ██  ██║██████╔╝██║  ██║     ` + util.Purple + `@ Tokens:` + util.ColorReset + ` %d tokens loaded.
    ██║  ██║██╔══╝  ██╔══██║██║  ██║██║     ████  ████║██╔══██╗██║  ██║    ` + util.Purple + `@ Warning:` + util.Red + ` Use at your own risk.` + util.ColorReset + ` 
    ██████╔╝███████╗██║  ██║██████╔╝╚██████╗╚████████╔╝██║  ██║██████╔╝    ` + util.Purple + `@ Author:` + util.ColorReset + ` https://github.com/GalaxzyDev` + util.Purple + `
-   ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ █═█═█═█═╝ ╚═╝  ╚═╝╚═════╝   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  
+   ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ █═█═█═█═╝ ╚═╝  ╚═╝╚═════╝   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-
-			          ` + util.White + `The best Discord raid tool. Trusted, Powerful, Purposeful. ` + util.Blue + `Golang Rewrite.` + util.Purple + ` 
+	     The best Discord raid tool, powerful, trusted, and purposeful. ` + util.Blue + `Using the power of Golang.` + util.Purple + `
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
    ` + util.White + ` You need to download our Better Discord (https://betterdiscord.app/) plugin to interact with Deadcord. You can
